@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "JNTU-AI",
   description: "",
+  icons: {
+    icon: "/jntuhlogo.png",
+  },
 };
 
 export default function RootLayout({ children }) {
