@@ -9,7 +9,7 @@ const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
 });
 
-export async function generateCoverLetter(params) {
+export async function generateCoverLetter(data) {
   const { userId } = await auth();
   if (!userId) {
     throw new Error("User not authenticated");
@@ -50,15 +50,14 @@ export async function generateCoverLetter(params) {
 
   try {
     const result = await model.generateContent(prompt);
-    const response = result.response;
+    const response = result.response.text();
 
     const cv = await db.coverLetter.create({
       data: {
-        response,
+        content: response,
         jobDescription: data.jobDescription,
         companyName: data.companyName,
         jobTitle: data.jobTitle,
-        status: "completed",
         userId: user.id,
       },
     });
@@ -66,7 +65,7 @@ export async function generateCoverLetter(params) {
     return cv;
   } catch (error) {
     console.log("Error generating Cover Letter", error);
-    throw new error("Failed to generate CL");
+    throw new Error("Failed to generate CL");
   }
 }
 
